@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver"
+					value="oracle.jdbc.driver.OracleDriver" /> <!--사용할 데이터베이스 커넥션 드라이브 -->
+				<property name="url"
+					value="jdbc:oracle:thin:@192.168.0.15:1521:XE" />	<!-- DB접속 URL -->
+				<property name="username" value="hr" /> <!-- 계정(스키마) -->
+				<property name="password" value="0000" /> <!-- 암호 -->
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="mapper/hr-mapper.xml" /><!-- 미리 SQL문을 만들어놓은 파일 -->
+
+	</mappers>
+</configuration>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hr">
+
+	<!-- 신규사원저장 -->
+	<insert id='employee_insert'>
+		INSERT INTO employees (EMPLOYEE_ID, FIRST_NAME, LAST_NAME, EMAIL,
+		PHONE_NUMBER,hire_date, SALARY, DEPARTMENT_ID,JOB_ID)
+		VALUES (employees_seq.nextval, #{first_name}, #{last_name} , #{email} ,
+		#{phone_number} , SysDate, #{salary} ,
+		<if test="department_id == -1">null ,</if>
+		<if test="department_id != -1"> #{department_id} ,</if>
+		<if test="job_id == -1">null )</if>
+		<if test="job_id != -1"> #{job_id}</if>
+		<if test="manager_id == -1">null</if>
+		<if test="manager_id != -1">#{manager_id})</if>
+	</insert>
+	<!-- 매니저로 지정할 사원목록 -->
+	<select id="employee_manager" resultType="hr.EmployeeDTO">
+		select employee_id manager_id, last_name ||''|| first_name name
+		from employees
+		order by name
+	</select>
+
+	<!-- 회사의 전체 부서목록조회 -->
+	<select id='all_department_list' resultType='hr.DepartmentDTO'>
+		select *
+		from departments
+		order by department_id
+	</select>
+
+	<!-- 업무목록조회 -->
+	<select id="jobs_list" resultType='hr.JobsDTO'>
+		select * from jobs order by job_id
+	</select>
+
+	<!-- 사원이 소속된 부서목록조회 -->
+	<select id='department_list' resultType='hr.DepartmentDTO'>
+		select distinct department_id, NVL(department_name, '소속없음') department_name
+		from employees e left outer join departments d using(department_id)
+		order by department_id
+	</select>
+
+	<!-- 해당 사원정보삭제 -->
+	<delete id='employee_delete'>
+		delete from employees where employee_id = #{employee_id}
+	</delete>
+
+	<!-- 해당 사원정보변경저장 -->
+	<update id='employee_update'>
+		update employees
+		set last_name = #{last_name}, first_name = #{first_name}
+		, email =
+		#{email}, phone_number = #{phone_number}
+		, salary = #{salary},
+		hire_date = #{hire_date}
+		, job_id = #{job_id}
+		<if test='department_id == -1'>, department_id = null</if>
+		<if test='department_id != -1'>, department_id = #{department_id}</if>
+		where employee_id = #{employee_id}
+	</update>
+
+
+	<!-- 해당 사원정보 조회 -->
+	<select id='employee_detail' resultType='hr.EmployeeDTO'>
+		select e.*, department_name, job_title
+		from employees e left outer join departments d on e.department_id =
+		d.department_id
+		inner join jobs j on j.job_id=e.job_id
+		where employee_id = #{employee_id}
+	</select>
+
+
+	<!-- 사원목록조회 -->
+	<select id='employee_list' resultType='hr.EmployeeDTO'>
+		select e.*, department_name, job_title
+		from employees e left outer join departments d on d.department_id =
+		e.department_id
+		inner join jobs j on e.job_id = j.job_id
+		order by employee_id
+	</select>
+	<select id='department_employee_list'
+		resultType='hr.EmployeeDTO'>
+		select e.*, department_name, job_title
+		from employees e left outer join departments d on d.department_id =
+		e.department_id
+		inner join jobs j on e.job_id = j.job_id
+		<if test="department_id == 0">where e.department_id is null</if>
+		<if test="department_id != 0">where e.department_id = #{department_id}</if>
+		order by employee_id
+	</select>
+
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="test">
+<!--  클래스랑 유사함. 
+  --> 
+<!-- 
+ 클래스에서 스태틱멤버 접근이랑 비슷,returnType=>ResultType SQL맵퍼는 ;<- 세미콜론으로 쿼리의 마지막 
+		문장을 찍으면 오류가 발생한다. 
+
+  --> 
+<!--  테스트데이터 변경저장 
+  --> 
+  <update id="update">update test_tbl set test_data1 = #{test_data1} , test_data2 = #{test_data2}, test_data3 = #{test_data3} where test_a = #{test_a}</update> 
+<!--  테스트데이터 상세조회 
+  --> 
+  <select id="detail" resultType="test.TestDTO">select * from test_tbl where test_a = #{cd}</select> 
+  <insert id="insert">insert into test_tbl (test_a, test_data1, test_data2, test_data3) values (seq_test.nextval, #{test_data1}, #{test_data2}, #{test_data3})</insert> 
+  <select id="selectTest" resultType="Integer">select 1 from dual</select> 
+<!-- 
+ 똑같이 selectone으로 DAO에서 조회를 할꺼임. 숫자가 아니라 나의 이니셜을 조회를 해보기..DUAL 조회쿼리와 
+		ResultType이 어떤것이면 될까? 
+		varchar2,,varchar , nvarchar 등등=>String
+		
+	
+  -->
+  <select id="cus" resultType="cus.list"> SELECT * FROM customer</select> 
+  <select id="selectName" resultType="String">SELECT 'KYM' name FROM DUAL</select> 
+  <select id="list" resultType="test.TestDTO">SELECT * FROM TEST_TBL order by test_a</select> 
+  </mapper>
+  
+  
+  
+  

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<input type='button' value='html파일 통신' id='ajax_html'>
+<body>
+
+<div id='data'></div>
+
+<script>
+$('#ajax_html').click(function(){
+	var tag;
+	$.ajax({
+		url: 'data.mb',
+		//async : false, 
+		success: function( response ){
+			console.log( response )
+			tag = "<table border='1'>";
+			$(response).each(function(){
+				console.log( this.name,' : ', this.age );
+				tag += "<tr><td>"+ this.name +"</td><td>" + this.age   +"</td>"
+					+  "</tr>";
+			});
+			tag += "</table>"; 
+		}
+	});
+	$('#data').html( tag );	
+});
+
+</script>
+
+</body>
+</html>
